@@ -1,38 +1,55 @@
-# Image-Based Auto Clicker
+# Image Based Auto Clicker
 
-A Python script that continuously scans your screen for a specific image (like a button) and instantly teleports the cursor to click it when found. It features a clean, fixed CLI "GUI" that updates in real-time without endlessly scrolling your terminal.
+A lightweight Python auto-clicker that searches your screen for image matches and clicks the center of the first matching button it finds. It keeps a simple terminal UI updated in place so the output stays readable while it runs.
 
-## Prerequisites
+## Features
 
-This script requires Python 3 and a few external libraries. You can install all dependencies via pip:
+- Scans a `buttons/` folder for image files
+- Supports `.png`, `.jpg`, and `.jpeg` images
+- Uses `pyautogui.locateCenterOnScreen(..., confidence=0.8)` to find matches even with slight visual differences
+- Clicks the center of the detected image
+- Watches for `Ctrl+Q` and exits immediately
+- Creates the `buttons/` folder automatically if it does not exist
+- Displays a simple live status screen instead of scrolling terminal output
+
+## Requirements
+
+Install the dependencies with:
 
 ```bash
 pip install pyautogui keyboard opencv-python
 ```
 
-*Note: `opencv-python` is required for the `confidence` parameter, which allows the script to find the image even if there are slight pixel variations.*
+`opencv-python` is needed for the `confidence` option used during image matching.
 
 ## Setup
 
-1. Take a screenshot of the specific button or element you want the script to click. Make sure to capture *only* the element itself, without too much background.
-2. Save this image as **`btn.png`** in the exact same directory as `main.py`.
+1. Run the script once to create the `buttons/` directory automatically, or create it manually in the same folder as `main.py`.
+2. Add screenshots of the UI elements you want to click into that `buttons/` folder.
+3. Use clear images with minimal unnecessary background for better matching.
 
-> [!IMPORTANT]
-> **Make sure to replace the existing `btn.png` file with your own button image.**
+> The script checks all images in `buttons/` automatically. You do not need to rename a single file like `btn.png`.
 
 ## Usage
 
-Run the script from your terminal:
+Run the app from the project directory:
 
 ```bash
 python main.py
 ```
 
-- The script will launch and display an `Auto Clicker - Active` terminal UI.
-- It will continuously scan your primary monitor for `btn.png`.
-- As soon as the image appears on screen, it will teleport the cursor and left-click its center.
-- **Panic Button:** You can press **`Ctrl+Q`** at any time while the script is running to immediately terminate it.
+The script will:
+
+- show a status screen labeled `Auto Clicker - Active`
+- look through every image in `buttons/`
+- locate the first match on screen
+- move the mouse to the matched center and click it
+- pause briefly after each click
+- continue scanning until you press `Ctrl+Q`
 
 ## Notes
-- The program requires a brief 1-second pause after every click to prevent rapidly spamming the button.
-- If you change the name of your screenshot, be sure to update the `target_element` variable in `main.py`!
+
+- The script pauses for about 1 second after each successful click to avoid spamming the target too quickly.
+- If no images are found in `buttons/`, it will keep checking and show a message in the terminal.
+- Match quality depends on how clean and specific your target screenshots are.
+- The app currently searches the primary screen area and uses the first valid match it finds in the folder order returned by the OS.
